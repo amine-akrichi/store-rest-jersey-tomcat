@@ -2,6 +2,7 @@ package org.example.storeservice.DAO;
 
 
 
+import jakarta.ws.rs.core.Response;
 import org.example.storeservice.model.Product;
 
 import java.sql.Connection;
@@ -43,7 +44,7 @@ public class ProductDAO {
     }
 
 
-    public Product getProduct(int id) {
+    public Response getProduct(int id) {
         String query = "SELECT * FROM Product WHERE id = " + id;
         Statement statement = null;
         try {
@@ -55,7 +56,7 @@ public class ProductDAO {
                     statement.getResultSet().getDouble("price"),
                     statement.getResultSet().getInt("quantity"),
                     statement.getResultSet().getInt("category_id"));
-            return product;
+            return Response.status(201).entity(product).build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -63,34 +64,37 @@ public class ProductDAO {
     }
 
 
-    public void createProduct(int id, String name, double price, int quantity, int category_id) {
-        String query = "INSERT INTO Product VALUES ('" + id + "','"  + name + "', " + price + ", " + quantity + ", " + category_id + ")";
+    public Response addProduct(Product product) {
+        String query = "INSERT INTO Product VALUES ('" + product.getId() + "','"  + product.getName() + "', " + product.getPrice() + ", " + product.getQuantity() + ", " + product.getCategory_id() + ")";
         Statement statement = null;
         try {
             statement = instance.createStatement();
             statement.executeUpdate(query);
+            return Response.status(201).entity(product).build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void updateProduct( int id, String name, double price, int quantity, int category_id) {
-        String query = "UPDATE Product SET name = '" + name + "', price = " + price + ", quantity = " + quantity + ", category_id = " + category_id + " WHERE id = " + id;
+    public Response updateProduct(int id,Product product) {
+        String query = "UPDATE Product SET name = '" + product.getName() + "', price = " + product.getPrice() + ", quantity = " + product.getQuantity() + ", category_id = " + product.getCategory_id() + " WHERE id = " + id;
         Statement statement = null;
         try {
             statement = instance.createStatement();
             statement.executeUpdate(query);
+            return Response.status(201).entity(product).build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteProduct(int id) {
+    public Response deleteProduct(int id) {
         String query = "DELETE FROM Product WHERE id = " + id;
         Statement statement = null;
         try {
             statement = instance.createStatement();
             statement.executeUpdate(query);
+            return Response.status(201).entity("Product with id " + id + " deleted").build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

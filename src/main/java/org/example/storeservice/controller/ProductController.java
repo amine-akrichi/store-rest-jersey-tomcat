@@ -1,11 +1,9 @@
 package org.example.storeservice.controller;
 
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.example.storeservice.DAO.ProductDAO;
 import org.example.storeservice.model.Product;
 
@@ -21,5 +19,28 @@ public class ProductController {
     @GET
     public List<Product> getAllProducts() {
         return productDAO.getAllProducts();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response GetProduct(@PathParam("id") int id) {
+        return productDAO.getProduct(id);
+    }
+
+    @POST
+    public Response addProduct(Product product) {
+        return productDAO.addProduct(product);
+    }
+
+    @PUT
+    @Path("{id}")
+    public Response updateProduct(@PathParam("id") int id, Product product) {
+        return productDAO.updateProduct(id, product);
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response deleteProduct(@PathParam("id") int id) {
+        return productDAO.deleteProduct(id);
     }
 }
